@@ -100,6 +100,9 @@ internal class KotlinJsonAdapter<T>(
     for (i in 0 until constructorSize) {
       if (values[i] === ABSENT_VALUE) {
         when {
+          allBindings[i]?.adapter?.handlesAbsence() == true -> {
+            values[i] = allBindings[i]?.adapter!!.onAbsence(checkNotNull(allBindings[i]?.jsonName ?: allBindings[i]?.name))
+          }
           constructor.parameters[i].isOptional -> isFullInitialized = false
           constructor.parameters[i].type.isMarkedNullable -> values[i] = null // Replace absent with null.
           else -> throw Util.missingProperty(
@@ -122,7 +125,11 @@ internal class KotlinJsonAdapter<T>(
     for (i in constructorSize until allBindings.size) {
       val binding = allBindings[i]!!
       val value = values[i]
-      binding.set(result, value)
+      if (value === ABSENT_VALUE && binding.adapter.handlesAbsence()) {
+        binding.set(result, binding.adapter.onAbsence(binding.jsonName ?: binding.name))
+      } else {
+        binding.set(result, value)
+      }
     }
 
     return result

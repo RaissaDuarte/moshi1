@@ -184,6 +184,7 @@ final class ClassJsonAdapter<T> extends JsonAdapter<T> {
 
   @Override
   public T fromJson(JsonReader reader) throws IOException {
+    boolean[] setOptionalFields = new boolean[fieldsArray.length];
     T result;
     try {
       result = classFactory.newInstance();
@@ -204,9 +205,21 @@ final class ClassJsonAdapter<T> extends JsonAdapter<T> {
           reader.skipValue();
           continue;
         }
+        setOptionalFields[index] = true;
         fieldsArray[index].read(reader, result);
       }
       reader.endObject();
+      for (int i = 0; i < setOptionalFields.length; i++) {
+        if (setOptionalFields[i]) continue;
+        // Unset. If it's optional, set it to empty. Note that we bypass the adapter from the
+        // field even if it's OptionalJsonAdapter in case it was short-circuited by another adapter,
+        // we
+        // only trust ours. Our OptionalJsonAdapter may be wrapped by NullSafeJsonAdapter too.
+        FieldBinding<?> fieldBinding = fieldsArray[i];
+        if (fieldBinding.adapter.handlesAbsence()) {
+          fieldBinding.field.set(result, fieldBinding.adapter.onAbsence(fieldBinding.name));
+        }
+      }
       return result;
     } catch (IllegalAccessException e) {
       throw new AssertionError();
