@@ -30,7 +30,6 @@ import com.squareup.moshi.internal.NullSafeJsonAdapter
 import com.squareup.moshi.kotlin.codegen.annotation.UppercaseInAnnotationPackage
 import com.squareup.moshi.kotlin.codegen.annotation.UppercaseInAnnotationPackageJsonAdapter
 import org.intellij.lang.annotations.Language
-import org.junit.Assert.assertNull
 import org.junit.Assert.fail
 import org.junit.Ignore
 import org.junit.Test
@@ -52,7 +51,7 @@ class GeneratedAdaptersTest {
     val json =
       """{"foo": "bar"}"""
 
-    val instance = adapter.fromJson(json)!!
+    val instance = adapter.fromJson(json)
     assertThat(instance.bar).isEqualTo("bar")
 
     // Write
@@ -77,7 +76,7 @@ class GeneratedAdaptersTest {
     // Read
     val json = "{\"\$foo\": \"bar\"}"
 
-    val instance = adapter.fromJson(json)!!
+    val instance = adapter.fromJson(json)
     assertThat(instance.bar).isEqualTo("bar")
 
     // Write
@@ -101,7 +100,7 @@ class GeneratedAdaptersTest {
     val json =
       """{"\"foo\"": "bar"}"""
 
-    val instance = adapter.fromJson(json)!!
+    val instance = adapter.fromJson(json)
     assertThat(instance.bar).isEqualTo("bar")
 
     // Write
@@ -127,7 +126,7 @@ class GeneratedAdaptersTest {
     val json =
       """{"foo":"fooString"}"""
 
-    val instance = adapter.fromJson(json)!!
+    val instance = adapter.fromJson(json)
     assertThat(instance.foo).isEqualTo("fooString")
     assertThat(instance.bar).isEqualTo("")
     assertThat(instance.nullableBar).isNull()
@@ -151,7 +150,7 @@ class GeneratedAdaptersTest {
       {"foo":"fooString","bar":"barString","nullableBar":"bar","bazList":["baz"]}
       """.trimIndent()
 
-    val instance2 = adapter.fromJson(json2)!!
+    val instance2 = adapter.fromJson(json2)
     assertThat(instance2.foo).isEqualTo("fooString")
     assertThat(instance2.bar).isEqualTo("barString")
     assertThat(instance2.nullableBar).isEqualTo("bar")
@@ -175,7 +174,7 @@ class GeneratedAdaptersTest {
     val json =
       """{"data":[null,"why"]}"""
 
-    val instance = adapter.fromJson(json)!!
+    val instance = adapter.fromJson(json)
     assertThat(instance.data).asList().containsExactly(null, "why").inOrder()
     assertThat(adapter.toJson(instance)).isEqualTo(json)
   }
@@ -191,7 +190,7 @@ class GeneratedAdaptersTest {
     val json =
       """{"ints":[0,1]}"""
 
-    val instance = adapter.fromJson(json)!!
+    val instance = adapter.fromJson(json)
     assertThat(instance.ints).asList().containsExactly(0, 1).inOrder()
     assertThat(adapter.toJson(instance)).isEqualTo(json)
   }
@@ -210,7 +209,7 @@ class GeneratedAdaptersTest {
     val invalidJson =
       """{"foo":null,"nullableString":null}"""
 
-    val instance = adapter.fromJson(json)!!
+    val instance = adapter.fromJson(json)
     assertThat(instance.foo).isEqualTo("foo")
     assertThat(instance.nullableString).isNull()
 
@@ -356,7 +355,7 @@ class GeneratedAdaptersTest {
     )
     assertThat(jsonAdapter.toJson(encoded)).isEqualTo("""{"a":3,"b":5}""")
 
-    val decoded = jsonAdapter.fromJson("""{"a":4,"b":6}""")!!
+    val decoded = jsonAdapter.fromJson("""{"a":4,"b":6}""")
     assertThat(decoded.a).isEqualTo(4)
     assertThat(decoded.b).isEqualTo(6)
   }
@@ -373,7 +372,7 @@ class GeneratedAdaptersTest {
     encoded.b = 5
     assertThat(jsonAdapter.toJson(encoded)).isEqualTo("""{"a":3,"b":5}""")
 
-    val decoded = jsonAdapter.fromJson("""{"a":3,"b":5}""")!!
+    val decoded = jsonAdapter.fromJson("""{"a":3,"b":5}""")
     assertThat(decoded.a).isEqualTo(3)
     assertThat(decoded.b).isEqualTo(5)
   }
@@ -394,7 +393,7 @@ class GeneratedAdaptersTest {
     encoded.b = 5
     assertThat(jsonAdapter.toJson(encoded)).isEqualTo("""{"a":3,"b":5}""")
 
-    val decoded = jsonAdapter.fromJson("""{"a":4,"b":6}""")!!
+    val decoded = jsonAdapter.fromJson("""{"a":4,"b":6}""")
     assertThat(decoded.a).isEqualTo(4)
     assertThat(decoded.b).isEqualTo(6)
   }
@@ -414,7 +413,7 @@ class GeneratedAdaptersTest {
     )
     assertThat(jsonAdapter.toJson(encoded)).isEqualTo("""{"a":3,"b":5}""")
 
-    val decoded = jsonAdapter.fromJson("""{"a":4,"b":6}""")!!
+    val decoded = jsonAdapter.fromJson("""{"a":4,"b":6}""")
     assertThat(decoded.a).isEqualTo(4)
     assertThat(decoded.b).isEqualTo(6)
   }
@@ -429,7 +428,7 @@ class GeneratedAdaptersTest {
     val encoded = ImmutableProperties(3, 5)
     assertThat(jsonAdapter.toJson(encoded)).isEqualTo("""{"a":3,"b":5}""")
 
-    val decoded = jsonAdapter.fromJson("""{"a":3,"b":5}""")!!
+    val decoded = jsonAdapter.fromJson("""{"a":3,"b":5}""")
     assertThat(decoded.a).isEqualTo(3)
     assertThat(decoded.b).isEqualTo(5)
   }
@@ -450,7 +449,7 @@ class GeneratedAdaptersTest {
     )
     assertThat(jsonAdapter.toJson(encoded)).isEqualTo("""{"a":3,"b":5}""")
 
-    val decoded = jsonAdapter.fromJson("""{"b":6}""")!!
+    val decoded = jsonAdapter.fromJson("""{"b":6}""")
     assertThat(decoded.a).isEqualTo(-1)
     assertThat(decoded.b).isEqualTo(6)
   }
@@ -466,7 +465,7 @@ class GeneratedAdaptersTest {
     assertThat(jsonAdapter.toJson(encoded)).isEqualTo("""{"b":5}""")
     assertThat(jsonAdapter.serializeNulls().toJson(encoded)).isEqualTo("""{"a":null,"b":5}""")
 
-    val decoded = jsonAdapter.fromJson("""{"a":null,"b":6}""")!!
+    val decoded = jsonAdapter.fromJson("""{"a":null,"b":6}""")
     assertThat(decoded.a).isEqualTo(null)
     assertThat(decoded.b).isEqualTo(6)
   }
@@ -482,7 +481,7 @@ class GeneratedAdaptersTest {
     assertThat(jsonAdapter.toJson(encoded)).isEqualTo("""{"b":5}""")
     assertThat(jsonAdapter.serializeNulls().toJson(encoded)).isEqualTo("""{"a":null,"b":5}""")
 
-    val decoded = jsonAdapter.fromJson("""{"b":6}""")!!
+    val decoded = jsonAdapter.fromJson("""{"b":6}""")
     assertThat(decoded.a).isNull()
     assertThat(decoded.b).isEqualTo(6)
   }
@@ -502,7 +501,7 @@ class GeneratedAdaptersTest {
     )
     assertThat(jsonAdapter.toJson(encoded)).isEqualTo("""{"a":"ANDROID","b":"Banana"}""")
 
-    val decoded = jsonAdapter.fromJson("""{"a":"Android","b":"Banana"}""")!!
+    val decoded = jsonAdapter.fromJson("""{"a":"Android","b":"Banana"}""")
     assertThat(decoded.a).isEqualTo("android")
     assertThat(decoded.b).isEqualTo("Banana")
   }
@@ -519,7 +518,7 @@ class GeneratedAdaptersTest {
     val encoded = ConstructorParameterWithQualifierInAnnotationPackage("Android")
     assertThat(jsonAdapter.toJson(encoded)).isEqualTo("""{"a":"ANDROID"}""")
 
-    val decoded = jsonAdapter.fromJson("""{"a":"Android"}""")!!
+    val decoded = jsonAdapter.fromJson("""{"a":"Android"}""")
     assertThat(decoded.a).isEqualTo("android")
   }
 
@@ -537,7 +536,7 @@ class GeneratedAdaptersTest {
     encoded.b = "Banana"
     assertThat(jsonAdapter.toJson(encoded)).isEqualTo("""{"a":"ANDROID","b":"Banana"}""")
 
-    val decoded = jsonAdapter.fromJson("""{"a":"Android","b":"Banana"}""")!!
+    val decoded = jsonAdapter.fromJson("""{"a":"Android","b":"Banana"}""")
     assertThat(decoded.a).isEqualTo("android")
     assertThat(decoded.b).isEqualTo("Banana")
   }
@@ -558,7 +557,7 @@ class GeneratedAdaptersTest {
     )
     assertThat(jsonAdapter.toJson(encoded)).isEqualTo("""{"key a":3,"b":5}""")
 
-    val decoded = jsonAdapter.fromJson("""{"key a":4,"b":6}""")!!
+    val decoded = jsonAdapter.fromJson("""{"key a":4,"b":6}""")
     assertThat(decoded.a).isEqualTo(4)
     assertThat(decoded.b).isEqualTo(6)
   }
@@ -575,7 +574,7 @@ class GeneratedAdaptersTest {
     encoded.b = 5
     assertThat(jsonAdapter.toJson(encoded)).isEqualTo("""{"key a":3,"b":5}""")
 
-    val decoded = jsonAdapter.fromJson("""{"key a":4,"b":6}""")!!
+    val decoded = jsonAdapter.fromJson("""{"key a":4,"b":6}""")
     assertThat(decoded.a).isEqualTo(4)
     assertThat(decoded.b).isEqualTo(6)
   }
@@ -596,7 +595,7 @@ class GeneratedAdaptersTest {
     )
     assertThat(jsonAdapter.toJson(encoded)).isEqualTo("""{"b":5}""")
 
-    val decoded = jsonAdapter.fromJson("""{"a":4,"b":6}""")!!
+    val decoded = jsonAdapter.fromJson("""{"a":4,"b":6}""")
     assertThat(decoded.a).isEqualTo(-1)
     assertThat(decoded.b).isEqualTo(6)
   }
@@ -611,7 +610,7 @@ class GeneratedAdaptersTest {
     val encoded = MultipleTransientConstructorParameters(3, 5, 7)
     assertThat(jsonAdapter.toJson(encoded)).isEqualTo("""{"b":5}""")
 
-    val decoded = jsonAdapter.fromJson("""{"a":4,"b":6}""")!!
+    val decoded = jsonAdapter.fromJson("""{"a":4,"b":6}""")
     assertThat(decoded.a).isEqualTo(-1)
     assertThat(decoded.b).isEqualTo(6)
     assertThat(decoded.c).isEqualTo(-1)
@@ -630,7 +629,7 @@ class GeneratedAdaptersTest {
     encoded.c = 5
     assertThat(jsonAdapter.toJson(encoded)).isEqualTo("""{"c":5}""")
 
-    val decoded = jsonAdapter.fromJson("""{"a":4,"b":5,"c":6}""")!!
+    val decoded = jsonAdapter.fromJson("""{"a":4,"b":5,"c":6}""")
     assertThat(decoded.a).isEqualTo(-1)
     assertThat(decoded.getB()).isEqualTo(-1)
     assertThat(decoded.c).isEqualTo(6)
@@ -658,7 +657,7 @@ class GeneratedAdaptersTest {
     encoded.c = 5
     assertThat(jsonAdapter.toJson(encoded)).isEqualTo("""{"c":5}""")
 
-    val decoded = jsonAdapter.fromJson("""{"a":4,"b":5,"c":6}""")!!
+    val decoded = jsonAdapter.fromJson("""{"a":4,"b":5,"c":6}""")
     assertThat(decoded.a).isEqualTo(-1)
     assertThat(decoded.getB()).isEqualTo(-1)
     assertThat(decoded.c).isEqualTo(6)
@@ -710,7 +709,7 @@ class GeneratedAdaptersTest {
 
     assertThat(jsonAdapter.toJson(encoded)).isEqualTo(json)
 
-    val decoded = jsonAdapter.fromJson(json)!!
+    val decoded = jsonAdapter.fromJson(json)
     assertThat(decoded.v01).isEqualTo(101)
     assertThat(decoded.v32).isEqualTo(132)
   }
@@ -780,7 +779,7 @@ class GeneratedAdaptersTest {
 
     assertThat(jsonAdapter.toJson(encoded)).isEqualTo(json)
 
-    val decoded = jsonAdapter.fromJson(json)!!
+    val decoded = jsonAdapter.fromJson(json)
     assertThat(decoded.v01).isEqualTo(101)
     assertThat(decoded.v32).isEqualTo(132)
     assertThat(decoded.v33).isEqualTo(133)
@@ -831,7 +830,7 @@ class GeneratedAdaptersTest {
     encoded.b = 5
     assertThat(jsonAdapter.toJson(encoded)).isEqualTo("""{"b":5}""")
 
-    val decoded = jsonAdapter.fromJson("""{"a":4,"b":6}""")!!
+    val decoded = jsonAdapter.fromJson("""{"a":4,"b":6}""")
     assertThat(decoded.a).isEqualTo(-1)
     assertThat(decoded.b).isEqualTo(6)
   }
@@ -849,7 +848,7 @@ class GeneratedAdaptersTest {
     val encoded = GetterOnly(3, 5)
     assertThat(jsonAdapter.toJson(encoded)).isEqualTo("""{"a":3,"b":5}""")
 
-    val decoded = jsonAdapter.fromJson("""{"a":4,"b":6}""")!!
+    val decoded = jsonAdapter.fromJson("""{"a":4,"b":6}""")
     assertThat(decoded.a).isEqualTo(4)
     assertThat(decoded.b).isEqualTo(6)
     assertThat(decoded.total).isEqualTo(10)
@@ -869,13 +868,13 @@ class GeneratedAdaptersTest {
     assertThat(jsonAdapter.toJson(encoded)).isEqualTo("""{"a":3,"b":5,"total":8}""")
 
     // Whether b is 6 or 7 is an implementation detail. Currently we call constructors then setters.
-    val decoded1 = jsonAdapter.fromJson("""{"a":4,"b":6,"total":11}""")!!
+    val decoded1 = jsonAdapter.fromJson("""{"a":4,"b":6,"total":11}""")
     assertThat(decoded1.a).isEqualTo(4)
     assertThat(decoded1.b).isEqualTo(7)
     assertThat(decoded1.total).isEqualTo(11)
 
     // Whether b is 6 or 7 is an implementation detail. Currently we call constructors then setters.
-    val decoded2 = jsonAdapter.fromJson("""{"a":4,"total":11,"b":6}""")!!
+    val decoded2 = jsonAdapter.fromJson("""{"a":4,"total":11,"b":6}""")
     assertThat(decoded2.a).isEqualTo(4)
     assertThat(decoded2.b).isEqualTo(7)
     assertThat(decoded2.total).isEqualTo(11)
@@ -900,7 +899,7 @@ class GeneratedAdaptersTest {
     )
     assertThat(jsonAdapter.toJson(encoded)).isEqualTo("""{"a":3,"b":5}""")
 
-    val decoded = jsonAdapter.fromJson("""{"a":4,"b":6}""")!!
+    val decoded = jsonAdapter.fromJson("""{"a":4,"b":6}""")
     assertThat(decoded.a).isEqualTo(4)
     assertThat(decoded.b).isEqualTo(6)
   }
@@ -919,7 +918,7 @@ class GeneratedAdaptersTest {
     encoded.b = 5
     assertThat(jsonAdapter.toJson(encoded)).isEqualTo("""{"b":5,"a":3}""")
 
-    val decoded = jsonAdapter.fromJson("""{"a":4,"b":6}""")!!
+    val decoded = jsonAdapter.fromJson("""{"a":4,"b":6}""")
     assertThat(decoded.a).isEqualTo(4)
     assertThat(decoded.b).isEqualTo(6)
   }
@@ -973,7 +972,7 @@ class GeneratedAdaptersTest {
     val encoded = ExtensionProperty(3)
     assertThat(jsonAdapter.toJson(encoded)).isEqualTo("""{"a":3}""")
 
-    val decoded = jsonAdapter.fromJson("""{"a":4,"b":6}""")!!
+    val decoded = jsonAdapter.fromJson("""{"a":4,"b":6}""")
     assertThat(decoded.a).isEqualTo(4)
   }
 
@@ -1026,7 +1025,7 @@ class GeneratedAdaptersTest {
       )
     ).isEqualTo("""[1,2]""")
 
-    val fromJson = jsonAdapter.fromJson("""{"a":3,"b":4}""")!!
+    val fromJson = jsonAdapter.fromJson("""{"a":3,"b":4}""")
     assertThat(fromJson.a).isEqualTo(3)
     assertThat(fromJson.b).isEqualTo(4)
   }
@@ -1052,7 +1051,7 @@ class GeneratedAdaptersTest {
       )
     ).isEqualTo("""{"a":1,"b":2}""")
 
-    val fromJson = jsonAdapter.fromJson("""[3,4]""")!!
+    val fromJson = jsonAdapter.fromJson("""[3,4]""")
     assertThat(fromJson.a).isEqualTo(3)
     assertThat(fromJson.b).isEqualTo(4)
   }
@@ -1074,7 +1073,7 @@ class GeneratedAdaptersTest {
     privateTransient.b = 2
     assertThat(jsonAdapter.toJson(privateTransient)).isEqualTo("""{"b":2}""")
 
-    val fromJson = jsonAdapter.fromJson("""{"a":3,"b":4}""")!!
+    val fromJson = jsonAdapter.fromJson("""{"a":3,"b":4}""")
     assertThat(fromJson.readA()).isEqualTo(-1)
     assertThat(fromJson.b).isEqualTo(4)
   }
@@ -1093,38 +1092,6 @@ class GeneratedAdaptersTest {
     }
   }
 
-  @Test fun propertyIsNothing() {
-    val moshi = Moshi.Builder()
-      .add(NothingAdapter())
-      .build()
-    val jsonAdapter = moshi.adapter<HasNothingProperty>().serializeNulls()
-
-    val toJson = HasNothingProperty()
-    toJson.a = "1"
-    assertThat(jsonAdapter.toJson(toJson)).isEqualTo("""{"a":"1","b":null}""")
-
-    val fromJson = jsonAdapter.fromJson("""{"a":"3","b":null}""")!!
-    assertThat(fromJson.a).isEqualTo("3")
-    assertNull(fromJson.b)
-  }
-
-  class NothingAdapter {
-    @ToJson fun toJson(jsonWriter: JsonWriter, unused: Nothing?) {
-      jsonWriter.nullValue()
-    }
-
-    @FromJson fun fromJson(jsonReader: JsonReader): Nothing? {
-      jsonReader.skipValue()
-      return null
-    }
-  }
-
-  @JsonClass(generateAdapter = true)
-  class HasNothingProperty {
-    var a: String? = null
-    var b: Nothing? = null
-  }
-
   @Test fun enclosedParameterizedType() {
     val jsonAdapter = moshi.adapter<HasParameterizedProperty>()
 
@@ -1137,7 +1104,7 @@ class GeneratedAdaptersTest {
     )
       .isEqualTo("""{"twins":{"a":"1","b":"2"}}""")
 
-    val hasParameterizedProperty = jsonAdapter.fromJson("""{"twins":{"a":"3","b":"4"}}""")!!
+    val hasParameterizedProperty = jsonAdapter.fromJson("""{"twins":{"a":"3","b":"4"}}""")
     assertThat(hasParameterizedProperty.twins.a).isEqualTo("3")
     assertThat(hasParameterizedProperty.twins.b).isEqualTo("4")
   }
@@ -1151,7 +1118,7 @@ class GeneratedAdaptersTest {
   @Test fun uppercasePropertyName() {
     val adapter = moshi.adapter<UppercasePropertyName>()
 
-    val instance = adapter.fromJson("""{"AAA":1,"BBB":2}""")!!
+    val instance = adapter.fromJson("""{"AAA":1,"BBB":2}""")
     assertThat(instance.AAA).isEqualTo(1)
     assertThat(instance.BBB).isEqualTo(2)
 
@@ -1169,7 +1136,7 @@ class GeneratedAdaptersTest {
   @Test fun mutableUppercasePropertyName() {
     val adapter = moshi.adapter<MutableUppercasePropertyName>()
 
-    val instance = adapter.fromJson("""{"AAA":1,"BBB":2}""")!!
+    val instance = adapter.fromJson("""{"AAA":1,"BBB":2}""")
     assertThat(instance.AAA).isEqualTo(1)
     assertThat(instance.BBB).isEqualTo(2)
 
@@ -1203,6 +1170,7 @@ class GeneratedAdaptersTest {
   @JsonClass(generateAdapter = true)
   data class HasNullableBoolean(val boolean: Boolean?)
 
+  @Ignore("TODO this is possibly no longer relevant in KType land")
   @Test fun nullablePrimitivesUseBoxedPrimitiveAdapters() {
     val moshi = Moshi.Builder()
       .add(
@@ -1238,7 +1206,7 @@ class GeneratedAdaptersTest {
 
   @Test fun adaptersAreNullSafe() {
     val moshi = Moshi.Builder().build()
-    val adapter = moshi.adapter<HasNullableBoolean>()
+    val adapter = moshi.adapter<HasNullableBoolean?>()
     assertThat(adapter.fromJson("null")).isNull()
     assertThat(adapter.toJson(null)).isEqualTo("null")
   }
@@ -1255,7 +1223,7 @@ class GeneratedAdaptersTest {
     )
     assertThat(adapter.toJson(encoded)).isEqualTo("""{"listOfInts":[1,2,-3]}""")
 
-    val decoded = adapter.fromJson("""{"listOfInts":[4,-5,6]}""")!!
+    val decoded = adapter.fromJson("""{"listOfInts":[4,-5,6]}""")
     assertThat(decoded).isEqualTo(
       HasCollectionOfPrimitives(
         listOf(4, -5, 6)
@@ -1269,6 +1237,7 @@ class GeneratedAdaptersTest {
   @Test fun customGenerator_withClassPresent() {
     val moshi = Moshi.Builder().build()
     val adapter = moshi.adapter<CustomGeneratedClass>()
+    @Suppress("UNCHECKED_CAST")
     val unwrapped = (adapter as NullSafeJsonAdapter<CustomGeneratedClass>).delegate
     assertThat(unwrapped).isInstanceOf(
       GeneratedAdaptersTest_CustomGeneratedClassJsonAdapter::class.java
@@ -1295,7 +1264,7 @@ class GeneratedAdaptersTest {
     val test = InternalPropertyWithoutBackingField()
     assertThat(adapter.toJson(test)).isEqualTo("""{"bar":5}""")
 
-    assertThat(adapter.fromJson("""{"bar":6}""")!!.bar).isEqualTo(6)
+    assertThat(adapter.fromJson("""{"bar":6}""").bar).isEqualTo(6)
   }
 
   @JsonClass(generateAdapter = true)
@@ -1323,7 +1292,7 @@ class GeneratedAdaptersTest {
     val moshi = Moshi.Builder().build()
     val adapter = moshi.adapter<ClassWithFieldJson>()
     //language=JSON
-    val instance = adapter.fromJson("""{"_links": "link", "_ids": "id" }""")!!
+    val instance = adapter.fromJson("""{"_links": "link", "_ids": "id" }""")
     assertThat(instance).isEqualTo(ClassWithFieldJson("link").apply { ids = "id" })
   }
 

@@ -83,7 +83,7 @@ internal class ClassJsonAdapter<T>(
     }
   }
 
-  override fun toJson(writer: JsonWriter, value: T?) {
+  override fun toJson(writer: JsonWriter, value: T) {
     try {
       writer.beginObject()
       for (fieldBinding in fieldsArray) {
@@ -199,7 +199,7 @@ internal class ClassJsonAdapter<T>(
         val annotations = field.jsonAnnotations
         val fieldName = field.name
         val adapter = moshi.adapter<Any>(
-          type = fieldType,
+          type = fieldType.toKType(), // TODO check for nullable annotations?
           annotations = annotations,
           fieldName = fieldName
         )
