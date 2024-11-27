@@ -3,36 +3,59 @@ name: CI
 on: [push, pull_request]
 
 jobs:
-  build:
-    name: 'Test Mode ${{ matrix.kotlin-test-mode }}'
+  test:
     runs-on: ubuntu-latest
 
-    strategy:
-      fail-fast: false
-      matrix:
-        kotlin-test-mode: [ 'REFLECT', 'KSP' ]
-
     steps:
-      - name: Checkout
+      - name: Checkout do Código
         uses: actions/checkout@v4
-
-      - name: Configure JDK
-        uses: actions/setup-java@v4
         with:
-          distribution: 'zulu'
-          java-version: '21'
-          cache: 'gradle'
+          fetch-depth: 0
 
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v4
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
 
-      - name: Test
-        run: ./gradlew build check --stacktrace -PkotlinTestMode=${{ matrix.kotlin-test-mode }}
+      - name: Instalar Dependências
+        run: npm install
 
-      - name: Publish (default branch only)
-        if: github.repository == 'square/moshi' && github.ref == 'refs/heads/master' && matrix.kotlin-test-mode == 'reflect'
-        run: ./gradlew publish
-        env:
-          ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.SONATYPE_NEXUS_USERNAME }}
-          ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.SONATYPE_NEXUS_PASSWORD }}
-          ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.ARTIFACT_SIGNING_PRIVATE_KEY }}
+      - name: Executar Testes e Gerar Relatório de Cobertura
+        run: npx jest --coverage
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+
+  # build:
+  #   name: 'Test Mode ${{ matrix.kotlin-test-mode }}'
+  #   runs-on: ubuntu-latest
+
+  #   strategy:
+  #     fail-fast: false
+  #     matrix:
+  #       kotlin-test-mode: [ 'REFLECT', 'KSP' ]
+
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v4
+
+  #     - name: Configure JDK
+  #       uses: actions/setup-java@v4
+  #       with:
+  #         distribution: 'zulu'
+  #         java-version: '21'
+  #         cache: 'gradle'
+
+  #     - name: Setup Gradle
+  #       uses: gradle/actions/setup-gradle@v4
+
+  #     - name: Test
+  #       run: ./gradlew build check --stacktrace -PkotlinTestMode=${{ matrix.kotlin-test-mode }}
+
+  #     - name: Publish (default branch only)
+  #       if: github.repository == 'square/moshi' && github.ref == 'refs/heads/master' && matrix.kotlin-test-mode == 'reflect'
+  #       run: ./gradlew publish
+  #       env:
+  #         ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.SONATYPE_NEXUS_USERNAME }}
+  #         ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.SONATYPE_NEXUS_PASSWORD }}
+  #         ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.ARTIFACT_SIGNING_PRIVATE_KEY }}
